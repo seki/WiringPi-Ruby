@@ -7,13 +7,14 @@ Q1 = $(V:1=)
 Q = $(Q1:0=@)
 ECHO1 = $(V:1=@:)
 ECHO = $(ECHO1:0=@echo)
+NULLCMD = :
 
 #### Start of system configuration section. ####
 
 srcdir = .
-topdir = /usr/include/ruby-2.1.0
+topdir = /usr/include/ruby-2.3.0
 hdrdir = $(topdir)
-arch_hdrdir = /usr/include/arm-linux-gnueabihf/ruby-2.1.0
+arch_hdrdir = /usr/include/arm-linux-gnueabihf/ruby-2.3.0
 PATH_SEPARATOR = :
 VPATH = $(srcdir):$(arch_hdrdir)/ruby:$(hdrdir)/ruby
 prefix = $(DESTDIR)/usr
@@ -51,12 +52,13 @@ infodir = $(prefix)/share/info
 docdir = $(datarootdir)/doc/$(PACKAGE)
 oldincludedir = $(DESTDIR)/usr/include
 includedir = $(prefix)/include
+runstatedir = $(localstatedir)/run
 localstatedir = $(DESTDIR)/var
 sharedstatedir = $(prefix)/com
 sysconfdir = $(DESTDIR)/etc
 datadir = $(datarootdir)
 datarootdir = $(prefix)/share
-libexecdir = $(prefix)/lib/ruby2.1
+libexecdir = $(prefix)/lib/ruby2.3
 sbindir = $(exec_prefix)/sbin
 bindir = $(exec_prefix)/bin
 archdir = $(rubyarchdir)
@@ -74,16 +76,17 @@ COUTFLAG = -o $(empty)
 
 RUBY_EXTCONF_H = 
 cflags   =  $(optflags) $(debugflags) $(warnflags)
+cxxflags =  $(optflags) $(debugflags) $(warnflags)
 optflags = -O3 -fno-fast-math
 debugflags = -ggdb3
-warnflags = -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wunused-variable -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration
+warnflags = -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wunused-variable -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat
 CCDLFLAGS = -fPIC
-CFLAGS   = $(CCDLFLAGS) -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -fPIC $(ARCH_FLAG)
+CFLAGS   = $(CCDLFLAGS) -g -O2 -fdebug-prefix-map=/build/ruby2.3-zLh4Ub/ruby2.3-2.3.3=. -fstack-protector-strong -Wformat -Werror=format-security -fPIC $(ARCH_FLAG)
 INCFLAGS = -I. -I$(arch_hdrdir) -I$(hdrdir)/ruby/backward -I$(hdrdir) -I$(srcdir)
 DEFS     = -D_FILE_OFFSET_BITS=64
-CPPFLAGS =  -I./WiringPi/wiringPi -I./WiringPi/devLib -I/usr/local/include -I/usr/include -I/usr/include -D_FORTIFY_SOURCE=2 $(DEFS) $(cppflags)
-CXXFLAGS = $(CCDLFLAGS) -g -O2 -fstack-protector-strong -Wformat -Werror=format-security $(ARCH_FLAG)
-ldflags  = -L. -Wl,-z,relro -L/build/ruby2.1-HxUe29/ruby2.1-2.1.5/debian/lib -fstack-protector -rdynamic -Wl,-export-dynamic
+CPPFLAGS =  -Wdate-time -D_FORTIFY_SOURCE=2 $(DEFS) $(cppflags)
+CXXFLAGS = $(CCDLFLAGS) -g -O2 -fdebug-prefix-map=/build/ruby2.3-zLh4Ub/ruby2.3-2.3.3=. -fstack-protector-strong -Wformat -Werror=format-security $(ARCH_FLAG)
+ldflags  = -L. -Wl,-z,relro -Wl,-z,now -fstack-protector -rdynamic -Wl,-export-dynamic
 dldflags =  
 ARCH_FLAG = 
 DLDFLAGS = $(ldflags) $(dldflags) $(ARCH_FLAG)
@@ -92,8 +95,8 @@ LDSHAREDXX = $(CXX) -shared
 AR = ar
 EXEEXT = 
 
-RUBY_INSTALL_NAME = ruby2.1
-RUBY_SO_NAME = ruby-2.1
+RUBY_INSTALL_NAME = $(RUBY_BASE_NAME)2.3
+RUBY_SO_NAME = ruby-2.3
 RUBYW_INSTALL_NAME = 
 RUBY_VERSION_NAME = $(RUBY_BASE_NAME)-$(ruby_version)
 RUBYW_BASE_NAME = rubyw
@@ -101,8 +104,8 @@ RUBY_BASE_NAME = ruby
 
 arch = arm-linux-gnueabihf
 sitearch = $(arch)
-ruby_version = 2.1.0
-ruby = $(bindir)/ruby2.1
+ruby_version = 2.3.0
+ruby = $(bindir)/$(RUBY_BASE_NAME)2.3
 RUBY = $(ruby)
 ruby_headers = $(hdrdir)/ruby.h $(hdrdir)/ruby/ruby.h $(hdrdir)/ruby/defines.h $(hdrdir)/ruby/missing.h $(hdrdir)/ruby/intern.h $(hdrdir)/ruby/st.h $(hdrdir)/ruby/subst.h $(arch_hdrdir)/ruby/config.h
 
@@ -120,8 +123,8 @@ TOUCH = exit >
 
 preload = 
 
-libpath = . $(archlibdir) ./WiringPi/wiringPi ./WiringPi/devLib /usr/local/lib /usr/lib
-LIBPATH =  -L. -L$(archlibdir) -L./WiringPi/wiringPi -L./WiringPi/devLib -L/usr/local/lib -L/usr/lib
+libpath = . $(archlibdir)
+LIBPATH =  -L. -L$(archlibdir)
 DEFFILE = 
 
 CLEANFILES = mkmf.log
@@ -132,10 +135,10 @@ extout =
 extout_prefix = 
 target_prefix = /wiringpi
 LOCAL_LIBS = 
-LIBS = $(LIBRUBYARG_SHARED)  -lpthread -lgmp -ldl -lcrypt -lm   -lc
+LIBS = $(LIBRUBYARG_SHARED) -lwiringPiDev -lwiringPi -lrt  -lpthread -lgmp -ldl -lcrypt -lm   -lc
 ORIG_SRCS = wiringpi_wrap.c
-SRCS = $(ORIG_SRCS) mcp23017.c softServo.c mcp23s17.c piThread.c mcp3002.c drcSerial.c pcf8591.c wiringPiSPI.c softPwm.c wiringPiI2C.c pcf8574.c wiringSerial.c max31855.c wiringShift.c ads1115.c mcp3422.c sr595.c mcp23008.c softTone.c wiringPi.c mcp23016.c piHiPri.c mcp23s08.c sn3218.c mcp3004.c wpiExtensions.c mcp4802.c max5322.c gertboard.c maxdetect.c piFace.c ds1302.c lcd128x64.c piNes.c scrollPhat.c piGlow.c lcd.c wiringpi_wrap.c
-OBJS = WiringPi/wiringPi/mcp23017.o WiringPi/wiringPi/softServo.o WiringPi/wiringPi/mcp23s17.o WiringPi/wiringPi/piThread.o WiringPi/wiringPi/mcp3002.o WiringPi/wiringPi/drcSerial.o WiringPi/wiringPi/pcf8591.o WiringPi/wiringPi/wiringPiSPI.o WiringPi/wiringPi/softPwm.o WiringPi/wiringPi/wiringPiI2C.o WiringPi/wiringPi/pcf8574.o WiringPi/wiringPi/wiringSerial.o WiringPi/wiringPi/max31855.o WiringPi/wiringPi/wiringShift.o WiringPi/wiringPi/ads1115.o WiringPi/wiringPi/mcp3422.o WiringPi/wiringPi/sr595.o WiringPi/wiringPi/mcp23008.o WiringPi/wiringPi/softTone.o WiringPi/wiringPi/wiringPi.o WiringPi/wiringPi/mcp23016.o WiringPi/wiringPi/piHiPri.o WiringPi/wiringPi/mcp23s08.o WiringPi/wiringPi/sn3218.o WiringPi/wiringPi/mcp3004.o WiringPi/wiringPi/wpiExtensions.o WiringPi/wiringPi/mcp4802.o WiringPi/wiringPi/max5322.o WiringPi/devLib/gertboard.o WiringPi/devLib/maxdetect.o WiringPi/devLib/piFace.o WiringPi/devLib/ds1302.o WiringPi/devLib/lcd128x64.o WiringPi/devLib/piNes.o WiringPi/devLib/scrollPhat.o WiringPi/devLib/piGlow.o WiringPi/devLib/lcd.o wiringpi_wrap.o
+SRCS = $(ORIG_SRCS) wiringpi_wrap.c
+OBJS = wiringpi_wrap.o
 HDRS = 
 TARGET = wiringpi
 TARGET_NAME = wiringpi
@@ -157,7 +160,7 @@ CLEANLIBS     = $(TARGET).so
 CLEANOBJS     = *.o  *.bak
 
 all:    $(DLLIB)
-static: $(STATIC_LIB)
+static: $(STATIC_LIB) install-rb
 .PHONY: all install static install-so install-rb
 .PHONY: clean clean-so clean-static clean-rb
 
@@ -189,7 +192,7 @@ install-rb-default: pre-install-rb-default
 pre-install-rb: Makefile
 pre-install-rb-default: Makefile
 pre-install-rb-default:
-	$(ECHO) installing default wiringpi libraries
+	@$(NULLCMD)
 $(TIMESTAMP_DIR)/.RUBYARCHDIR.-.wiringpi.time:
 	$(Q) $(MAKEDIRS) $(@D) $(RUBYARCHDIR)
 	$(Q) $(TOUCH) $@
@@ -198,35 +201,55 @@ site-install: site-install-so site-install-rb
 site-install-so: install-so
 site-install-rb: install-rb
 
-.SUFFIXES: .c .m .cc .mm .cxx .cpp .C .o
+.SUFFIXES: .c .m .cc .mm .cxx .cpp .o .S
 
 .cc.o:
 	$(ECHO) compiling $(<)
 	$(Q) $(CXX) $(INCFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(COUTFLAG)$@ -c $<
 
+.cc.S:
+	$(ECHO) translating $(<)
+	$(Q) $(CXX) $(INCFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(COUTFLAG)$@ -S $<
+
 .mm.o:
 	$(ECHO) compiling $(<)
 	$(Q) $(CXX) $(INCFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(COUTFLAG)$@ -c $<
+
+.mm.S:
+	$(ECHO) translating $(<)
+	$(Q) $(CXX) $(INCFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(COUTFLAG)$@ -S $<
 
 .cxx.o:
 	$(ECHO) compiling $(<)
 	$(Q) $(CXX) $(INCFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(COUTFLAG)$@ -c $<
 
+.cxx.S:
+	$(ECHO) translating $(<)
+	$(Q) $(CXX) $(INCFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(COUTFLAG)$@ -S $<
+
 .cpp.o:
 	$(ECHO) compiling $(<)
 	$(Q) $(CXX) $(INCFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(COUTFLAG)$@ -c $<
 
-.C.o:
-	$(ECHO) compiling $(<)
-	$(Q) $(CXX) $(INCFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(COUTFLAG)$@ -c $<
+.cpp.S:
+	$(ECHO) translating $(<)
+	$(Q) $(CXX) $(INCFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(COUTFLAG)$@ -S $<
 
 .c.o:
 	$(ECHO) compiling $(<)
 	$(Q) $(CC) $(INCFLAGS) $(CPPFLAGS) $(CFLAGS) $(COUTFLAG)$@ -c $<
 
+.c.S:
+	$(ECHO) translating $(<)
+	$(Q) $(CC) $(INCFLAGS) $(CPPFLAGS) $(CFLAGS) $(COUTFLAG)$@ -S $<
+
 .m.o:
 	$(ECHO) compiling $(<)
 	$(Q) $(CC) $(INCFLAGS) $(CPPFLAGS) $(CFLAGS) $(COUTFLAG)$@ -c $<
+
+.m.S:
+	$(ECHO) translating $(<)
+	$(Q) $(CC) $(INCFLAGS) $(CPPFLAGS) $(CFLAGS) $(COUTFLAG)$@ -S $<
 
 $(DLLIB): $(OBJS) Makefile
 	$(ECHO) linking shared-object wiringpi/$(DLLIB)

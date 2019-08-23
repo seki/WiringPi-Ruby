@@ -1806,43 +1806,42 @@ static VALUE mWiringpi;
 #define SWIG_as_voidptrptr(a) ((void)SWIG_as_voidptr(*a),(void**)(a)) 
 
 
-#include "WiringPi/wiringPi/wiringPi.h"
-#include "WiringPi/wiringPi/wiringPiI2C.h"
-#include "WiringPi/wiringPi/wiringPiSPI.h"
-#include "WiringPi/wiringPi/wiringSerial.h"
-#include "WiringPi/wiringPi/wiringShift.h"
-#include "WiringPi/wiringPi/drcSerial.h"
-#include "WiringPi/wiringPi/ads1115.h"
-#include "WiringPi/wiringPi/max31855.h"
-#include "WiringPi/wiringPi/max5322.h"
-#include "WiringPi/wiringPi/mcp23008.h"
-#include "WiringPi/wiringPi/mcp23016.h"
-#include "WiringPi/wiringPi/mcp23016reg.h"
-#include "WiringPi/wiringPi/mcp23017.h"
-#include "WiringPi/wiringPi/mcp23s08.h"
-#include "WiringPi/wiringPi/mcp23s17.h"
-#include "WiringPi/wiringPi/mcp23x0817.h"
-#include "WiringPi/wiringPi/mcp23x08.h"
-#include "WiringPi/wiringPi/mcp3002.h"
-#include "WiringPi/wiringPi/mcp3004.h"
-#include "WiringPi/wiringPi/mcp3422.h"
-#include "WiringPi/wiringPi/mcp4802.h"
-#include "WiringPi/wiringPi/pcf8574.h"
-#include "WiringPi/wiringPi/pcf8591.h"
-#include "WiringPi/wiringPi/sn3218.h"
-#include "WiringPi/wiringPi/softPwm.h"
-#include "WiringPi/wiringPi/softServo.h"
-#include "WiringPi/wiringPi/softTone.h"
-#include "WiringPi/wiringPi/sr595.h"
-#include "WiringPi/devLib/ds1302.h"
-#include "WiringPi/devLib/font.h"
-#include "WiringPi/devLib/gertboard.h"
-#include "WiringPi/devLib/lcd128x64.h"
-#include "WiringPi/devLib/lcd.h"
-#include "WiringPi/devLib/maxdetect.h"
-#include "WiringPi/devLib/piGlow.h"
-#include "WiringPi/devLib/piNes.h"
-#include "WiringPi/devLib/scrollPhat.h"
+#include <wiringPi.h>
+#include <wiringPiI2C.h>
+#include <wiringPiSPI.h>
+#include <wiringSerial.h>
+#include <wiringShift.h>
+#include <drcSerial.h>
+#include <ads1115.h>
+#include <max31855.h>
+#include <max5322.h>
+#include <mcp23008.h>
+#include <mcp23016.h>
+#include <mcp23016reg.h>
+#include <mcp23017.h>
+#include <mcp23s08.h>
+#include <mcp23s17.h>
+#include <mcp23x0817.h>
+#include <mcp23x08.h>
+#include <mcp3002.h>
+#include <mcp3004.h>
+#include <mcp3422.h>
+#include <mcp4802.h>
+#include <pcf8574.h>
+#include <pcf8591.h>
+#include <sn3218.h>
+#include <softPwm.h>
+#include <softServo.h>
+#include <softTone.h>
+#include <sr595.h>
+#include <ds1302.h>
+#include <gertboard.h>
+#include <lcd128x64.h>
+#include <lcd.h>
+#include <maxdetect.h>
+#include <piGlow.h>
+#include <piNes.h>
+#include <scrollPhat.h>
 
 
 #include <limits.h>
@@ -4282,7 +4281,7 @@ fail:
   return Qnil;
 }
 
-
+#ifdef HAVE_softServoWrite
 SWIGINTERN VALUE
 _wrap_softServoWrite(int argc, VALUE *argv, VALUE self) {
   int arg1 ;
@@ -4390,7 +4389,7 @@ _wrap_softServoSetup(int argc, VALUE *argv, VALUE self) {
 fail:
   return Qnil;
 }
-
+#endif
 
 SWIGINTERN VALUE
 _wrap_softToneCreate(int argc, VALUE *argv, VALUE self) {
@@ -6803,8 +6802,10 @@ SWIGEXPORT void Init_wiringpi(void) {
   rb_define_module_function(mWiringpi, "softPwmCreate", _wrap_softPwmCreate, -1);
   rb_define_module_function(mWiringpi, "softPwmWrite", _wrap_softPwmWrite, -1);
   rb_define_module_function(mWiringpi, "softPwmStop", _wrap_softPwmStop, -1);
+#ifdef HAVE_softServoWrite
   rb_define_module_function(mWiringpi, "softServoWrite", _wrap_softServoWrite, -1);
   rb_define_module_function(mWiringpi, "softServoSetup", _wrap_softServoSetup, -1);
+#endif
   rb_define_module_function(mWiringpi, "softToneCreate", _wrap_softToneCreate, -1);
   rb_define_module_function(mWiringpi, "softToneStop", _wrap_softToneStop, -1);
   rb_define_module_function(mWiringpi, "softToneWrite", _wrap_softToneWrite, -1);
