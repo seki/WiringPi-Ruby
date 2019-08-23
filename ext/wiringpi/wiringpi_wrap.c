@@ -3251,7 +3251,7 @@ _wrap_wiringPiSPIDataRW(int argc, VALUE *argv, VALUE self) {
   arg1 = (int)(val1);
   {
     arg2 = StringValuePtr(argv[1]);
-    arg3 = strlen(arg2);
+    arg3 = RSTRING_LEN(argv[1]);
   }
   result = (int)wiringPiSPIDataRW(arg1,arg2,arg3);
   vresult = SWIG_From_int((int)(result));
