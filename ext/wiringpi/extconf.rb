@@ -8,7 +8,6 @@ have_library("wiringPi", "pinMode")
 have_library("wiringPiDev", "lcd128x64clear")
 if have_library("wiringPiDev", "softServoWrite")
   $defs << "-DHAVE_softServoWrite"
-else
 end
 
 create_makefile('wiringpi/wiringpi')    
