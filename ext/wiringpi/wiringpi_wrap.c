@@ -1812,17 +1812,23 @@ static VALUE mWiringpi;
 #include <wiringSerial.h>
 #include <wiringShift.h>
 #include <drcSerial.h>
+#ifndef TINKER_BOARD
 #include <ads1115.h>
+#endif
 #include <max31855.h>
 #include <max5322.h>
 #include <mcp23008.h>
 #include <mcp23016.h>
+#ifndef TINKER_BOARD
 #include <mcp23016reg.h>
+#endif
 #include <mcp23017.h>
 #include <mcp23s08.h>
 #include <mcp23s17.h>
+#ifndef TINKER_BOARD
 #include <mcp23x0817.h>
 #include <mcp23x08.h>
+#endif
 #include <mcp3002.h>
 #include <mcp3004.h>
 #include <mcp3422.h>
@@ -1831,7 +1837,9 @@ static VALUE mWiringpi;
 #include <pcf8591.h>
 #include <sn3218.h>
 #include <softPwm.h>
+#ifndef TINKER_BOARD
 #include <softServo.h>
+#endif
 #include <softTone.h>
 #include <sr595.h>
 #include <ds1302.h>
@@ -1841,7 +1849,9 @@ static VALUE mWiringpi;
 #include <maxdetect.h>
 #include <piGlow.h>
 #include <piNes.h>
+#ifndef TINKER_BOARD
 #include <scrollPhat.h>
+#endif
 
 
 #include <limits.h>
@@ -2644,7 +2654,7 @@ fail:
   return Qnil;
 }
 
-
+#ifndef TINKER_BOARD
 SWIGINTERN VALUE
 _wrap_digitalReadByte(int argc, VALUE *argv, VALUE self) {
   unsigned int result;
@@ -2659,7 +2669,7 @@ _wrap_digitalReadByte(int argc, VALUE *argv, VALUE self) {
 fail:
   return Qnil;
 }
-
+#endif
 
 SWIGINTERN VALUE
 _wrap_pwmSetMode(int argc, VALUE *argv, VALUE self) {
@@ -3687,7 +3697,7 @@ fail:
   return Qnil;
 }
 
-
+#ifndef TINKER_BOARD
 SWIGINTERN VALUE
 _wrap_ads1115Setup(int argc, VALUE *argv, VALUE self) {
   int arg1 ;
@@ -3718,7 +3728,7 @@ _wrap_ads1115Setup(int argc, VALUE *argv, VALUE self) {
 fail:
   return Qnil;
 }
-
+#endif
 
 SWIGINTERN VALUE
 _wrap_max31855Setup(int argc, VALUE *argv, VALUE self) {
@@ -6093,7 +6103,7 @@ fail:
   return Qnil;
 }
 
-
+#ifndef TINKER_BOARD
 SWIGINTERN VALUE
 _wrap_scrollPhatPoint(int argc, VALUE *argv, VALUE self) {
   int arg1 ;
@@ -6435,7 +6445,7 @@ _wrap_scrollPhatSetup(int argc, VALUE *argv, VALUE self) {
 fail:
   return Qnil;
 }
-
+#endif
 
 
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
@@ -6747,7 +6757,9 @@ SWIGEXPORT void Init_wiringpi(void) {
   rb_define_module_function(mWiringpi, "getAlt", _wrap_getAlt, -1);
   rb_define_module_function(mWiringpi, "pwmToneWrite", _wrap_pwmToneWrite, -1);
   rb_define_module_function(mWiringpi, "digitalWriteByte", _wrap_digitalWriteByte, -1);
+#ifndef TINKER_BOARD
   rb_define_module_function(mWiringpi, "digitalReadByte", _wrap_digitalReadByte, -1);
+#endif
   rb_define_module_function(mWiringpi, "pwmSetMode", _wrap_pwmSetMode, -1);
   rb_define_module_function(mWiringpi, "pwmSetRange", _wrap_pwmSetRange, -1);
   rb_define_module_function(mWiringpi, "pwmSetClock", _wrap_pwmSetClock, -1);
@@ -6784,7 +6796,9 @@ SWIGEXPORT void Init_wiringpi(void) {
   rb_define_module_function(mWiringpi, "shiftIn", _wrap_shiftIn, -1);
   rb_define_module_function(mWiringpi, "shiftOut", _wrap_shiftOut, -1);
   rb_define_module_function(mWiringpi, "drcSetupSerial", _wrap_drcSetupSerial, -1);
+#ifndef TINKER_BOARD
   rb_define_module_function(mWiringpi, "ads1115Setup", _wrap_ads1115Setup, -1);
+#endif
   rb_define_module_function(mWiringpi, "max31855Setup", _wrap_max31855Setup, -1);
   rb_define_module_function(mWiringpi, "max5322Setup", _wrap_max5322Setup, -1);
   rb_define_module_function(mWiringpi, "mcp23008Setup", _wrap_mcp23008Setup, -1);
@@ -6857,6 +6871,7 @@ SWIGEXPORT void Init_wiringpi(void) {
   rb_define_module_function(mWiringpi, "piGlowSetup", _wrap_piGlowSetup, -1);
   rb_define_module_function(mWiringpi, "setupNesJoystick", _wrap_setupNesJoystick, -1);
   rb_define_module_function(mWiringpi, "readNesJoystick", _wrap_readNesJoystick, -1);
+#ifndef TINKER_BOARD
   rb_define_module_function(mWiringpi, "scrollPhatPoint", _wrap_scrollPhatPoint, -1);
   rb_define_module_function(mWiringpi, "scrollPhatLine", _wrap_scrollPhatLine, -1);
   rb_define_module_function(mWiringpi, "scrollPhatLineTo", _wrap_scrollPhatLineTo, -1);
@@ -6869,5 +6884,6 @@ SWIGEXPORT void Init_wiringpi(void) {
   rb_define_module_function(mWiringpi, "scrollPhatPrintSpeed", _wrap_scrollPhatPrintSpeed, -1);
   rb_define_module_function(mWiringpi, "scrollPhatIntensity", _wrap_scrollPhatIntensity, -1);
   rb_define_module_function(mWiringpi, "scrollPhatSetup", _wrap_scrollPhatSetup, -1);
+#endif
 }
 

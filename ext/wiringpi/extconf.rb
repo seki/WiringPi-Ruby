@@ -9,5 +9,8 @@ have_library("wiringPiDev", "lcd128x64clear")
 if have_library("wiringPiDev", "softServoWrite")
   $defs << "-DHAVE_softServoWrite"
 end
+if !have_library("wiringPiDev", "ads1115Setup")
+  $defs << "-DTINKER_BOARD"
+end
 
 create_makefile('wiringpi/wiringpi')    
